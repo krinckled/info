@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>hi</title>
+    <style>
+      body {
+        background: #12142a;
+        color: #eee;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        padding: 20px;
+      }
+      .container {
+        background: #1f223a;
+        padding: 50px 60px;
+        border-radius: 18px;
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.7);
+        max-width: 480px;
+        width: 100%;
+        text-align: left;
+      }
+      h1 {
+        margin-bottom: 40px;
+        font-weight: 700;
+        color: #8ab4f8;
+        text-align: center;
+        font-size: 2.4rem;
+      }
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        margin: 24px 0;
+        font-size: 1.3rem;
+        line-height: 1.5;
+      }
+      .label {
+        color: #a0a0c7;
+        font-weight: 600;
+        width: 160px;
+      }
+      .value {
+        color: #e0e0ff;
+        max-width: 60%;
+        text-align: right;
+        word-break: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>hi</h1>
+      <div class="info-row">
+        <div class="label">IP address:</div>
+        <div id="ip" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">browser:</div>
+        <div id="browser" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">city:</div>
+        <div id="city" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">region:</div>
+        <div id="region" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">country:</div>
+        <div id="country" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">ISP:</div>
+        <div id="isp" class="value">...</div>
+      </div>
+      <div class="info-row">
+        <div class="label">VPN / proxy:</div>
+        <div id="vpn" class="value">...</div>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("browser").textContent = navigator.userAgent;
+
+      fetch("https://ipwho.is/")
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            const ip =
+              data.ip ||
+              data.query ||
+              (data.connection && data.connection.ip) ||
+              "n/a";
+
+            document.getElementById("ip").textContent = ip;
+            document.getElementById("city").textContent = data.city || "N/A";
+            document.getElementById("region").textContent =
+              data.region || "n/a";
+            document.getElementById("country").textContent =
+              data.country || "n/a";
+            document.getElementById("isp").textContent =
+              (data.connection && data.connection.isp) || "n/a";
+            document.getElementById("vpn").textContent =
+              data.security && data.security.vpn ? "yes" : "no";
+          } else {
+            document.getElementById("ip").textContent = "error";
+            document.getElementById("vpn").textContent = "error";
+          }
+        })
+        .catch(() => {
+          document.getElementById("ip").textContent = "error";
+          document.getElementById("vpn").textContent = "error";
+        });
+    </script>
+  </body>
+</html>
